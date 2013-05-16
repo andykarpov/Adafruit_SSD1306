@@ -27,6 +27,8 @@ All text above, and the splash screen must be included in any redistribution
 #define BLACK 0
 #define WHITE 1
 
+#define BUGGY_OLED // buggy SSD1306-compatible OLED from Sandstrom DAB radio has some RAM addressing issues, so we need to hack it a bit
+
 #define SSD1306_I2C_ADDRESS   0x3C	// 011110+SA0+RW - 0x3C or 0x3D
 // Address for 128x32 is 0x3C
 // Address for 128x32 is 0x3D (default) or 0x3C (if SA0 is grounded)

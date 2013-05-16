@@ -28,7 +28,7 @@ All text above, and the splash screen below must be included in any redistributi
 #include "glcdfont.c"
 
 // a 5x7 font table
-extern uint8_t PROGMEM font[];
+extern const uint8_t PROGMEM font[];
 
 // the memory buffer for the LCD
 
@@ -433,11 +433,20 @@ void Adafruit_SSD1306::display(void) {
       // send a bunch of data in one xmission
       Wire.beginTransmission(_i2caddr);
       Wire.write(0x40);
+#ifndef BUGGY_OLED
       for (uint8_t x=0; x<16; x++) {
 	Wire.write(buffer[i]);
 	i++;
       }
       i--;
+#else
+      Wire.write(buffer[i]);
+      if ((i+1)%128 == 0) {
+        for (int j=0; j<4; j++) {
+            Wire.write(0);
+        }
+      }
+#endif
       Wire.endTransmission();
     }
     // i wonder why we have to do this (check datasheet)
