@@ -147,6 +147,9 @@ Adafruit_SSD1306::Adafruit_SSD1306(int8_t reset) {
   
 
 void Adafruit_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr) {
+#ifdef SSD1306_132_64
+  constructor(128, 64);
+#endif
 #ifdef SSD1306_128_64
   constructor(128, 64);
 #endif
@@ -227,8 +230,8 @@ void Adafruit_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr) {
     ssd1306_command(SSD1306_NORMALDISPLAY);                 // 0xA6
   #endif
 
-  #if defined SSD1306_128_64
-    // Init sequence for 128x64 OLED module
+  #if defined SSD1306_128_64 || defined SSD1306_132_64
+    // Init sequence for 128x64 / 132x64 OLED module
     ssd1306_command(SSD1306_DISPLAYOFF);                    // 0xAE
     ssd1306_command(SSD1306_SETDISPLAYCLOCKDIV);            // 0xD5
     ssd1306_command(0x80);                                  // the suggested ratio 0x80
@@ -433,7 +436,7 @@ void Adafruit_SSD1306::display(void) {
       // send a bunch of data in one xmission
       Wire.beginTransmission(_i2caddr);
       Wire.write(0x40);
-#ifndef BUGGY_OLED
+#ifndef SSD1306_132_64
       for (uint8_t x=0; x<16; x++) {
 	Wire.write(buffer[i]);
 	i++;
